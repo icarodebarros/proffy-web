@@ -35,6 +35,8 @@
     font: Archivo;
 }
 
+/* Pseudo-classe ':focus-within' estiliza o .input-block caso o seu input interno esteja focado*/
+/* Pseudo-elemento '::after' insere um elemento ao final do .input-block quando o seu input interno estiver focado */
 #search-teachers .input-block:focus-within::after {
     width: calc(100% - 3.2rem);
     height: 2px;
