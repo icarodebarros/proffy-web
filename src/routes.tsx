@@ -4,7 +4,7 @@ import Landing from './pages/Landing';
 import TeacherList from './pages/TeacherList';
 import TeacherForm from './pages/TeacherForm';
 
-function Routes() {
+function Routes(): JSX.Element {
     return (
         <BrowserRouter>
             <Route path="/" exact component={Landing}/>

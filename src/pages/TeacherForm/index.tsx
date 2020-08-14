@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
+import { AxiosResponse } from 'axios';
 
 import PageHeader from '../../components/PageHeader';
 import Input from '../../components/Input';
@@ -12,7 +13,23 @@ import api from '../../services/api';
 
 import './styles.css';
 
-function TeacherForm() {
+interface ScheduleItem {
+    week_day: number;
+    from: string;
+    to: string;
+}
+
+interface ScheduleCreation {
+    name: string;
+    avatar: string;
+    whatsapp: string;
+    bio: string;
+    subject: string;
+    cost: number;
+    schedule: ScheduleItem[];
+}
+
+function TeacherForm(): JSX.Element {
     const history = useHistory();
 
     const [name, setName] = useState('');
@@ -23,19 +40,19 @@ function TeacherForm() {
     const [subject, setSubject] = useState('');
     const [cost, setCost] = useState('');
 
-    const [scheduleItems, setScheduleItems] = useState([
-        { week_day: 0, from: '', to: '' },
-    ]);
+    const newScheduleItem: ScheduleItem = { week_day: 0, from: '', to: '' };
 
-    function addNewScheduleItem() {
+    const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([ { ...newScheduleItem } ]);
+
+    function addNewScheduleItem(): void {
         setScheduleItems([
             ...scheduleItems,
-            { week_day: 0, from: '', to: '' }
+            { ...newScheduleItem }
         ]);
     }
 
-    function setScheduleItemValue(position: number, field: string, value: string) {
-        const updatedScheduleItems = scheduleItems.map((scheduleItem, index) => {
+    function setScheduleItemValue(position: number, field: string, value: string): void {
+        const updatedScheduleItems = scheduleItems.map((scheduleItem: ScheduleItem, index: number) => {
             if (index === position) {
                 return { ...scheduleItem, [field]: value };
             }
@@ -46,24 +63,27 @@ function TeacherForm() {
         setScheduleItems(updatedScheduleItems);
     }
 
-    function handleCreateClass(event: FormEvent) {
+    function handleCreateClass(event: FormEvent): void {
         event.preventDefault();
 
-        api.post('classes', {
-            name,
+        const postData: ScheduleCreation = {
+            name: name,
             avatar,
             whatsapp,
             bio,
             subject,
             cost: Number(cost),
             schedule: scheduleItems
-        }).then(() => {
-            alert('Cadastro realizado com sucesso!');
-            history.push('/');
+        };
 
-        }).catch((err: Error) => {
-            alert('Erro no cadastro! ' + err.message);
-        });
+        api.post<ScheduleCreation, AxiosResponse>('classes', postData)
+            .then(() => {
+                alert('Cadastro realizado com sucesso!');
+                history.push('/');
+
+            }).catch((err: Error) => {
+                alert('Erro no cadastro! ' + err.message);
+            });
 
     }
 
@@ -80,7 +100,7 @@ function TeacherForm() {
                         <legend>Seus dados</legend>
 
                         <Input name="name" label="Nome completo" 
-                            value={name} onChange={(event) => {setName(event.target.value)}} />
+                            value={name} onChange={(event) => { setName(event.target.value)}} />
                         <Input name="avatar" label="Avatar" 
                             value={avatar} onChange={(event) => {setAvatar(event.target.value)}} />
                         <Input name="whatsapp" label="Whatsapp" 
@@ -120,7 +140,7 @@ function TeacherForm() {
 
                         {scheduleItems.map((scheduleItem, index) => {
                             return (
-                                <div key={scheduleItem.week_day} className="schedule-item">
+                                <div key={index} className="schedule-item">
                                     <Select name="week_day" label="Dia da semana" value={scheduleItem.week_day}
                                         onChange={(event) => setScheduleItemValue(index, 'week_day', event.target.value)}
                                         options={[
@@ -157,7 +177,7 @@ function TeacherForm() {
                 </form>
             </main> 
         </div>
-    )
+    );
 }
 
 export default TeacherForm;

@@ -20,7 +20,7 @@ interface TeacherItemProps {
     teacher: Teacher;
 }
 
-const TeacherItem: React.FC<TeacherItemProps> = (props) => {
+const TeacherItem: React.FC<TeacherItemProps> = (props: TeacherItemProps) => {
 
     function createNewConnection() {
         api.post('/connections', { user_id: props.teacher.id });
@@ -52,6 +52,6 @@ const TeacherItem: React.FC<TeacherItemProps> = (props) => {
             </footer>
         </article>
     );
-}
+};
 
 export default TeacherItem;

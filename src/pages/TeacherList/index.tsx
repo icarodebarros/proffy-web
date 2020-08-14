@@ -1,4 +1,5 @@
 import React, { useState, FormEvent } from 'react';
+import { AxiosResponse } from 'axios';
 
 import PageHeader from '../../components/PageHeader';
 import TeacherItem, { Teacher } from '../../components/TeacherItem';
@@ -9,8 +10,14 @@ import api from '../../services/api';
 
 import './styles.css';
 
-function TeacherList() {
-    const [teachers, setTeachers] = useState([]);
+interface TeacherFilter {
+    subject: string;
+    week_day: string;
+    time: string;
+}
+
+function TeacherList(): JSX.Element {
+    const [teachers, setTeachers] = useState<Teacher[]>([]);
 
     const [subject, setSubject] = useState('');
     const [week_day, setWeekDay] = useState('');
@@ -19,8 +26,14 @@ function TeacherList() {
     async function searchTeachers(event: FormEvent) {
         event.preventDefault();
 
-        const response = await api.get('/classes', {
-            params: { subject, week_day, time }
+        const filter: TeacherFilter = {
+            subject,
+            week_day,
+            time
+        };
+
+        const response: AxiosResponse = await api.get('/classes', {
+            params: filter
         });
 
         setTeachers(response.data);
@@ -71,7 +84,7 @@ function TeacherList() {
 
             <main>
                 {teachers.map((teacher: Teacher) => {
-                    return <TeacherItem key={teacher.id} teacher={teacher} />
+                    return <TeacherItem key={teacher.id} teacher={teacher} />;
                 })}
             </main>
         </div>

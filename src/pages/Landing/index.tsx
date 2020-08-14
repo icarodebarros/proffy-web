@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { AxiosResponse } from 'axios';
 
 import logoImg from '../../assets/images/logo.svg';
 import landingImg from '../../assets/images/landing.svg';
@@ -12,15 +13,20 @@ import api from '../../services/api';
 
 import './styles.css';
 
-function Landing() {
+interface connections {
+    total: number;
+}
+
+function Landing(): JSX.Element {
     const [totalConnections, setTotalConnections] = useState(0);
 
     useEffect(() => {
-        api.get('/connections').then(response => {
-            const { total } = response.data;
+        api.get('/connections')
+            .then((response: AxiosResponse<connections>) => {
+                const { total } = response.data;
 
-            setTotalConnections(total);
-        })
+                setTotalConnections(total);
+            });
     }, []);
 
     return (
