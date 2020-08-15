@@ -1,6 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
-import { AxiosResponse } from 'axios';
+
+import ClassesService, { ClassCreation } from '../../services/classes.service';
 
 import PageHeader from '../../components/PageHeader';
 import Input from '../../components/Input';
@@ -9,24 +10,12 @@ import Select from '../../components/Select';
 
 import warningIcon from '../../assets/images/icons/warning.svg';
 
-import api from '../../services/api';
-
 import './styles.css';
 
-interface ScheduleItem {
+export interface ScheduleItem {
     week_day: number;
     from: string;
     to: string;
-}
-
-interface ScheduleCreation {
-    name: string;
-    avatar: string;
-    whatsapp: string;
-    bio: string;
-    subject: string;
-    cost: number;
-    schedule: ScheduleItem[];
 }
 
 function TeacherForm(): JSX.Element {
@@ -66,7 +55,7 @@ function TeacherForm(): JSX.Element {
     function handleCreateClass(event: FormEvent): void {
         event.preventDefault();
 
-        const postData: ScheduleCreation = {
+        const classData: ClassCreation = {
             name: name,
             avatar,
             whatsapp,
@@ -76,7 +65,7 @@ function TeacherForm(): JSX.Element {
             schedule: scheduleItems
         };
 
-        api.post<ScheduleCreation, AxiosResponse>('classes', postData)
+        ClassesService.completeClassRegistration(classData)
             .then(() => {
                 alert('Cadastro realizado com sucesso!');
                 history.push('/');
@@ -84,7 +73,6 @@ function TeacherForm(): JSX.Element {
             }).catch((err: Error) => {
                 alert('Erro no cadastro! ' + err.message);
             });
-
     }
 
     return (

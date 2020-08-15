@@ -4,7 +4,7 @@ import Routes from './routes';
 
 import './assets/styles/global.css';
 
-function App() {
+function App(): JSX.Element {
   return (
     <Routes />
   );

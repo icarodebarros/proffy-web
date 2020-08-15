@@ -1,8 +1,8 @@
 import React from 'react';
 
-import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
+import ConnectionService from '../../services/connection.service';
 
-import api from '../../services/api';
+import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css';
 
@@ -23,7 +23,7 @@ interface TeacherItemProps {
 const TeacherItem: React.FC<TeacherItemProps> = (props: TeacherItemProps) => {
 
     function createNewConnection() {
-        api.post('/connections', { user_id: props.teacher.id });
+        ConnectionService.addNewConnection({ user_id: props.teacher.id });
     }
 
     return (

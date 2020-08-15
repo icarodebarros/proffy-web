@@ -1,20 +1,13 @@
 import React, { useState, FormEvent } from 'react';
-import { AxiosResponse } from 'axios';
 
 import PageHeader from '../../components/PageHeader';
 import TeacherItem, { Teacher } from '../../components/TeacherItem';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 
-import api from '../../services/api';
+import ClassesService, { TeacherFilter } from '../../services/classes.service';
 
 import './styles.css';
-
-interface TeacherFilter {
-    subject: string;
-    week_day: string;
-    time: string;
-}
 
 function TeacherList(): JSX.Element {
     const [teachers, setTeachers] = useState<Teacher[]>([]);
@@ -32,11 +25,9 @@ function TeacherList(): JSX.Element {
             time
         };
 
-        const response: AxiosResponse = await api.get('/classes', {
-            params: filter
-        });
+        const teachersFound = await ClassesService.searchTeachers(filter);
 
-        setTeachers(response.data);
+        setTeachers(teachersFound);
     }
 
     return (
