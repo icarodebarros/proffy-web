@@ -3,6 +3,7 @@ import { AxiosResponse } from 'axios';
 
 import { ScheduleItem } from '../pages/TeacherForm';
 import { Teacher } from '../components/TeacherItem';
+import { environment } from '../environments/environment';
 
 export interface TeacherFilter {
     subject: string;
@@ -20,7 +21,7 @@ export interface ClassCreation {
     schedule: ScheduleItem[];
 }
 
-const path = '/classes';
+const path = environment.apiPathClasses;
 
 export default class ClassesService {
 
